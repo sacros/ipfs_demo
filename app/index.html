@@ -1,0 +1,52 @@
+<html>
+
+<head>
+  <title>IPFS Demo</title>
+</head>
+
+<script src="app.js"></script>
+
+<body>
+  <div style="overflow:auto">
+    <h1>IPFS DATA SAVE DEMO</h1>
+    <div style="float:left;width:50%">
+      <h2>Enter details to save:</h2>
+      <input placeholder="Entr Name" id='inp1' />
+      <br>
+      <br>
+      <input placeholder="Entr Title" id='inp2' />
+      <br>
+      <br>
+      <input placeholder="Entr Message" id='inp3' />
+      <br>
+      <br>
+      <button onclick="yo1()">Click</button>
+      <br>
+      <span id="ans1"></span>
+
+    </div>
+
+
+    <div style="overflow:auto;float:left;width:50%">
+      <h2>Check from hashID:</h2>
+      <input placeholder="Entr hashID" id='inp4' />
+      <br>
+      <br>
+      <button onclick="yo2()">Click</button>
+      <span id="ans2"></span>
+    </div>
+  </div>
+
+  <br>
+  <br>
+
+  <div>
+    <h2>Check last 5 transactions:</h2>
+    <button onclick="yo3()">Show</button>
+    <button onclick="clr(ans3)">Clear</button>
+    <span id="ans3"></span>
+  </div>
+
+</body>
+
+</html>
