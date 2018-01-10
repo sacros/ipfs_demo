@@ -96,15 +96,16 @@ window.yo2 = function () {
   })
 }
 
-window.clr = function (element) {
-  document.getElementById("ans3").innerHTML = "";
-  console.log("Clear called");  
-}
-
 window.yo3 = async function () {
   console.log("lastHashId is: ",lastHashId);
-  for (var i = lastHashId; i > lastHashId - 5; i--) {
-    await loadSubmission(i);
+
+  try{for (var i = lastHashId; i > lastHashId - 5; i--) {
+    let submission = await loadSubmission(i);
+    console.log(submission);
+    document.getElementById("ans3").innerHTML += "<p>Tx #" + i + "<br>" + "data:   " + JSON.stringify(submission);
+  }}
+  catch(err){
+    console.error(err.message);
   }
 }
 
@@ -113,19 +114,27 @@ function loadSubmission(hashId) {
     console.log("Inside loadSubmission() with i= ",hashId);
     let submission = {};
     HashStore.deployed().then(function(contractInstance){
-      contractInstance.find(hashId, {from: web3.eth.accounts[0]}).then((result) => {
-        ipfs.catJSON(result[1], (err, data) => {
+      contractInstance.find(hashId, {from: web3.eth.accounts[0]}).then((values) => {
+        submission.sender = values[0];
+        submission.hashContent = values[1];
+        submission.timestamp = values[2].toNumber();
+        submission.hashId = hashId;
+        ipfs.catJSON(values[1], (err, data) => {
           if(err){
             console.log(err);
+            return resolve(submission);
           }
-          console.log(data);
-          document.getElementById("ans3").innerHTML += "<p>Tx #" + hashId + "<br>" + "data:   " + JSON.stringify(data) + "<br>" + "Timestamp: " + result[2] + "<br>" + "Sender: " + result[0] + "<br>" + "Hash: " + result[1] + "<br>";
-        })
-      resolve(result);
+          submission.title = data.title;
+          submission.text = data.text;
+          submission.fullName = data.fullName;
+          resolve(submission);
+        });
         
-      })
-    })
-  })
+      }).catch((err) => {
+        return reject(err);
+      });
+    });
+  });
 }
 
 window.addEventListener('load', function () {
