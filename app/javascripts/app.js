@@ -112,22 +112,14 @@ window.yo3 = async function () {
 function loadSubmission(hashId) {
     return new Promise((resolve, reject) => {
     console.log("Inside loadSubmission() with i= ",hashId);
-    let submission = {};
     HashStore.deployed().then(function(contractInstance){
-      contractInstance.find(hashId, {from: web3.eth.accounts[0]}).then((values) => {
-        submission.sender = values[0];
-        submission.hashContent = values[1];
-        submission.timestamp = values[2].toNumber();
-        submission.hashId = hashId;
+      contractInstance.find(hashId, {from: web3.eth.accounts[0]}).then((result) => {
         ipfs.catJSON(values[1], (err, data) => {
           if(err){
             console.log(err);
-            return resolve(submission);
+            return resolve(result);
           }
-          submission.title = data.title;
-          submission.text = data.text;
-          submission.fullName = data.fullName;
-          resolve(submission);
+          resolve(data);
         });
         
       }).catch((err) => {
